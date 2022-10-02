@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import react from "react";
+import "./App.css";
+import axios from "axios";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends react.Component {
+  state = {
+    advice: "",
+  };
+  componentDidMount() {
+    this.fetchAdvice();
+  }
+  fetchAdvice = () => {
+    axios
+      .get("https://api.adviceslip.com/advice")
+      .then((response) => {
+        // console.log(response.data.slip.advice);
+        const { advice } = response.data.slip;
+        this.setState({ advice });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  render() {
+    return (
+      <div className="app">
+        <div className="card">
+          <h1 className="heading">{this.state.advice}</h1>
+        </div>
+        <button
+          className="button"
+          onClick={() => {
+            this.fetchAdvice();
+            var audio = new Audio("projectone-quotessrcassetsaudio.mp3");
+            audio.play();
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          <span>Give me Advice {"🐱‍🏍"}</span>
+        </button>
+      </div>
+    );
+  }
 }
-
 export default App;
